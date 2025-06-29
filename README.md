@@ -1,6 +1,6 @@
 # ecommerce_app
 
-A new Flutter project.
+Flutter E-Commerce Mobile App Learn Project
 
 ## Getting Started
 
