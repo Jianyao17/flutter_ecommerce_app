@@ -1,8 +1,8 @@
-import 'dart:async';
 import 'dart:ui';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:ecommerce_app/models/product.dart';
-import 'package:ecommerce_app/pages/product_details.dart';
+import '../pages/product_details.dart';
+import '../models/product.dart';
 
 class ProductCarousel extends StatefulWidget
 {
@@ -56,7 +56,7 @@ class _ProductCarouselState extends State<ProductCarousel>
     super.dispose();
   }
 
-  String _formatCurrency(double price) => 'Rp ${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  String formatCurrency(double price) => 'Rp ${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
 
   @override
   Widget build(BuildContext context)
@@ -195,7 +195,7 @@ class _ProductCarouselState extends State<ProductCarousel>
                                     ),
                                   ),
                                   Text(
-                                    _formatCurrency(product.priceIdr),
+                                    formatCurrency(product.priceIdr),
                                     style: const TextStyle(
                                       color: Colors.green,
                                       fontWeight: FontWeight.bold,

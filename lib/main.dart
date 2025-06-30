@@ -1,5 +1,5 @@
-import 'package:ecommerce_app/nav_menu.dart';
 import 'package:flutter/material.dart';
+import 'nav_menu.dart';
 
 void main() => runApp(const MyApp());
 

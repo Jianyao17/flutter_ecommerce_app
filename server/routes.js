@@ -242,6 +242,40 @@ const routes = [
     },
   },
   {
+    method: "POST",
+    path: "/cart/item",
+    handler: (request, h) => 
+    {
+      const { productId } = request.payload;
+      if (!productId) 
+      {
+        return h
+          .response({ message: "Invalid input. 'productId' is required." })
+          .code(400);
+      }
+      const product = db.products.find((p) => p.id === productId);
+      if (!product) 
+      {
+        return h
+          .response({ message: "Product not found" })
+          .code(404);
+      }
+      const currentQty = shoppingCart.get(productId) || 0;
+      if (currentQty + 1 > product.stock) 
+      {
+        return h
+          .response({ message: `Insufficient stock for ${product.name}. Only ${product.stock - currentQty} left in cart.` })
+          .code(400);
+      }
+      shoppingCart.set(productId, currentQty + 1);
+      return h
+        .response({
+          message: `${product.name} has been added to your cart (total: ${currentQty + 1}).`,
+          cart: Object.fromEntries(shoppingCart)
+        }).code(200);
+    },
+  },
+  {
     method: "DELETE",
     path: "/cart/item/{id}",
     handler: (request, h) => 

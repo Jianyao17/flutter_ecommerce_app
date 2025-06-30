@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ecommerce_app/models/product.dart';
-import 'package:ecommerce_app/pages/product_details.dart';
+import '../pages/product_details.dart';
+import '../models/product.dart';
 
 class ProductCard extends StatelessWidget
 {
@@ -11,7 +11,7 @@ class ProductCard extends StatelessWidget
   });
 
   // Helper untuk format mata uang
-  String _formatCurrency(double price) => 'Rp ${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  String formatCurrency(double price) => 'Rp ${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
 
   @override
   Widget build(BuildContext context)
@@ -80,7 +80,7 @@ class ProductCard extends StatelessWidget
                     ),
                     const SizedBox(height: 8),
 
-                    Text(_formatCurrency(product.priceIdr),
+                    Text(formatCurrency(product.priceIdr),
                       maxLines: 1, overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 16,

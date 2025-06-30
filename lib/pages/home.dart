@@ -1,8 +1,8 @@
-import 'package:ecommerce_app/models/product.dart';
-import 'package:ecommerce_app/widget/product_card.dart';
-import 'package:ecommerce_app/widget/product_carousel.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import '../widget/product_carousel.dart';
+import '../widget/product_card.dart';
+import '../models/product.dart';
 
 
 class HomePage extends StatefulWidget {

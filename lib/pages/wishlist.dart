@@ -1,7 +1,7 @@
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:ecommerce_app/models/product.dart';
-import 'package:ecommerce_app/widget/product_card.dart';
+import '../services/wishlist_service.dart';
+import '../widget/product_card.dart';
+import '../models/product.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -11,66 +11,88 @@ class WishlistPage extends StatefulWidget {
 }
 
 class _WishlistPageState extends State<WishlistPage>
-    with AutomaticKeepAliveClientMixin
 {
+  final WishlistService _wishlistService = WishlistService();
+  List<Product>? wishlistProducts = [];
   String _searchQuery = '';
-  List<Product>? wishlistProducts;
 
   bool _isLoading = true;
   String? _error;
 
-  @override
-  bool get wantKeepAlive => true;
-
   Future<void> _loadWishlistProducts() async
   {
-    try {
-      var URL = Uri.parse('http://10.0.2.2:3000/products/wishlist');
-      final response = await http.get(URL);
+    if (!mounted) return;
 
-      if (response.statusCode == 200)
-      {
-        setState(() {
-          // Assuming the response body is a JSON array of products
-          wishlistProducts = Product.listFromJson(response.body);
-          _isLoading = false;
-        });
-      }
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final products = await _wishlistService.fetchWishlist();
+      if (!mounted) return;
+
+      setState(() {
+        wishlistProducts = products;
+        _isLoading = false;
+      });
     } catch (e) {
-      throw Exception('Failed to load wishlist products: $e');
+      if (!mounted) return;
+
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
     }
   }
 
   @override
   void initState()
   {
-    _loadWishlistProducts();
     super.initState();
+    _loadWishlistProducts();
   }
 
-  void _onSearchChanged(String value)
-  => setState(() => _searchQuery = value);
+  void _onSearchChanged(String value) => setState(() => _searchQuery = value);
 
   @override
   Widget build(BuildContext context)
   {
-    super.build(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black12,
-        leading: Icon(Icons.favorite),
-        title: Text('Wishlist',
+        leading: const Icon(Icons.favorite),
+        title: const Text('Wishlist',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20
           )
         ),
+        actions: [
+          if (_error != null || !_isLoading)
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: _loadWishlistProducts,
+            )
+        ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? Center(child: Text(_error!))
-              : buildWishlistLayout(context),
+        ? const Center(child: CircularProgressIndicator())
+        : _error != null
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Error: $_error'),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _loadWishlistProducts,
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          )
+        : buildWishlistLayout(context),
     );
   }
 
@@ -89,7 +111,7 @@ class _WishlistPageState extends State<WishlistPage>
           // Search Bar
           TextField(
             onChanged: _onSearchChanged,
-            style: TextStyle(
+            style: const TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 14
             ),
@@ -97,12 +119,12 @@ class _WishlistPageState extends State<WishlistPage>
               hintText: 'Find Product',
               prefixIcon: const Icon(Icons.search),
               enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.7)),
+                  borderSide: BorderSide(color: Colors.grey.withAlpha(179)),
                   borderRadius: BorderRadius.circular(16)
               ),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color:
-                  Theme.of(context).primaryColor.withValues(alpha: 0.8), width: 2),
+                  Theme.of(context).primaryColor.withAlpha(204), width: 2),
                   borderRadius: BorderRadius.circular(16)
               ),
             ),
@@ -141,3 +163,6 @@ class _WishlistPageState extends State<WishlistPage>
     );
   }
 }
+
+
+

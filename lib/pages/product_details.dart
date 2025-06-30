@@ -1,9 +1,10 @@
-import 'package:ecommerce_app/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../services/wishlist_service.dart';
+import '../services/cart_service.dart';
+import '../models/product.dart';
 
-class ProductDetailsPage extends StatefulWidget
-{
+class ProductDetailsPage extends StatefulWidget {
   final Product currentProduct;
   const ProductDetailsPage({super.key, required this.currentProduct});
 
@@ -13,22 +14,74 @@ class ProductDetailsPage extends StatefulWidget
 
 class _ProductDetailsPageState extends State<ProductDetailsPage>
 {
+  final WishlistService _wishlistService = WishlistService();
+  final CartService _cartService = CartService();
+  bool _isWishlisted = false;
+
+  @override
+  void initState()
+  {
+    super.initState();
+    _isWishlisted = widget.currentProduct.isWishlisted;
+  }
+
+  Future<void> _toggleWishlist() async
+  {
+    final oldState = _isWishlisted;
+
+    try {
+      setState(() {
+        _isWishlisted = !_isWishlisted;
+      });
+
+      if (_isWishlisted) {
+        await _wishlistService.addToWishlist(widget.currentProduct.id);
+      } else {
+        await _wishlistService.removeFromWishlist(widget.currentProduct.id);
+      }
+
+      HapticFeedback.lightImpact();
+      if (mounted)
+      {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _isWishlisted
+                ? '${widget.currentProduct.name} ditambahkan ke wishlist.'
+                : '${widget.currentProduct.name} dihapus dari wishlist!',
+            ),
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      }
+    } catch (e) {
+      // Revert on failure
+      if (mounted)
+      {
+        setState(() { _isWishlisted = oldState; });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal ${oldState ? 'menghapus dari' : 'menambahkan ke'} wishlist: ${e.toString()}'),
+          ),
+        );
+      }
+    }
+  }
+
   // Helper untuk format mata uang
-  String _formatCurrency(double price) => 'Rp ${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  String formatCurrency(double price) => 'Rp ${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
 
   @override
   Widget build(BuildContext context)
   {
-    bool isWishlisted = widget.currentProduct.isWishlisted;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black12,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
+          icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.pop(context)
         ),
-        title: Text('Product Details',
+        title: const Text('Product Details',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20
@@ -56,7 +109,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                 color: Colors.white,
               ),
             ),
-            onPressed: () {
+            onPressed: ()
+            {
+              // Add product to cart
+              _cartService.addToCart(widget.currentProduct.id);
+              HapticFeedback.lightImpact();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('${widget.currentProduct.name} added to cart!')),
               );
@@ -114,9 +171,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                             Row(
                               children: [
                                 // Harga Produk
-                                Icon(Icons.sell_outlined, color: Colors.green, size: 20),
+                                const Icon(Icons.sell_outlined, color: Colors.green, size: 20),
                                 const SizedBox(width: 4),
-                                Text(_formatCurrency(widget.currentProduct.priceIdr ?? 0),
+                                Text(formatCurrency(widget.currentProduct.priceIdr ?? 0),
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -145,27 +202,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                           side: BorderSide(
-                            color: isWishlisted ? Colors.transparent : Colors.green,
+                            color: _isWishlisted ? Colors.transparent : Colors.green,
                             width: 2,
                           ),
                         ),
-                        backgroundColor: isWishlisted ? Colors.green : Colors.transparent,
+                        backgroundColor: _isWishlisted ? Colors.green : Colors.transparent,
                         elevation: 2.0,
-                        onPressed: ()
-                        {
-                          HapticFeedback.lightImpact();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                isWishlisted
-                                  ? '${widget.currentProduct.name} dihapus dari wishlist!'
-                                  : '${widget.currentProduct.name} ditambahkan ke wishlist.',
-                              ),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
-                        },
-
+                        onPressed: _toggleWishlist,
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
                           transitionBuilder: (child, animation)
@@ -177,9 +220,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                               ),
                             ),
                           child: Icon(
-                            isWishlisted ? Icons.favorite : Icons.favorite_border_outlined,
-                            color: isWishlisted ? Colors.white : Colors.green,
-                            key: ValueKey<bool>(isWishlisted),
+                            _isWishlisted ? Icons.favorite : Icons.favorite_border_outlined,
+                            color: _isWishlisted ? Colors.white : Colors.green,
+                            key: ValueKey<bool>(_isWishlisted),
                           ),
                         ),
                       )
@@ -192,11 +235,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                       .map((tag) => Chip(
                         padding: const EdgeInsets.all(4),
                         label: Text(tag[0].toUpperCase() + tag.substring(1),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14)),
                         backgroundColor: Colors.white10,
-                        side: BorderSide(color: Colors.transparent),
+                        side: const BorderSide(color: Colors.transparent),
                       )).toList(),
                   ),
                   const SizedBox(height: 24),
@@ -226,3 +269,4 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
     );
   }
 }
+

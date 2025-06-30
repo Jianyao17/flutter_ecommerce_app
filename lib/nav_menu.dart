@@ -1,8 +1,9 @@
-import 'package:ecommerce_app/pages/home.dart';
-import 'package:ecommerce_app/pages/wishlist.dart';
-import 'package:ecommerce_app/pages/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'pages/home.dart';
+import 'pages/wishlist.dart';
+import 'pages/cart.dart';
+import 'pages/profile.dart';
 
 
 class NavMenu extends StatefulWidget {
@@ -19,7 +20,7 @@ class _NavMenuState extends State<NavMenu> {
   final List<Widget> _pages = [
     const HomePage(),
     const WishlistPage(),
-    const Scaffold(),
+    const CartPage(),
     const ProfilePage()
   ];
 
