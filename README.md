@@ -18,8 +18,8 @@ Flutter E-Commerce Mobile App Learn Project
 
 1. **Clone repository:**
    ```bash
-   git clone <repository-url>
-   cd ecommerce_app
+   git clone https://github.com/Jianyao17/flutter_ecommerce_app.git
+   cd flutter_ecommerce_app
    ```
 
 2. **Install dependencies Flutter:**
