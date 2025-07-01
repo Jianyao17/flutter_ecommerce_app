@@ -5,7 +5,11 @@
       "name": "VGA Card Palit GeForce RTX 3050 StormX 6GB GDDR6",
       "priceIdr": 2849000,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2024/8/15/0768825f-a003-4bd2-b149-ab496bdcd5d1.jpg.webp?ect=4g",
-      "tags": ["Komputer", "Komponen Komputer", "VGA Card"],
+      "tags": [
+        "Komputer",
+        "Komponen Komputer",
+        "VGA Card"
+      ],
       "rating": 5,
       "stock": 21,
       "description": "GeForce RTX 3050 6GB adalah upgrade hebat bagi para gamer GeForce GTX 1650 dan GTX 1050 untuk meningkatkan ke RTX."
@@ -15,97 +19,137 @@
       "name": "Apple iPhone 15 Garansi Resmi - 128GB",
       "priceIdr": 11119000,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2024/8/15/51f97c64-a8b2-45c9-8c9b-e7161cdecae5.png.webp?ect=4g",
-      "tags": ["Handphone & Tablet", "iOS", "Handphone"],
+      "tags": [
+        "Handphone & Tablet",
+        "iOS",
+        "Handphone"
+      ],
       "rating": 5,
       "stock": 82,
       "description": "Handphone brand Iphone berbasis iOS dengan storage sebesar 128 GB."
     },
-     {
+    {
       "id": 3,
       "name": "SONY PSVITA 64 GB 128 GB 256 GB FULL GAMES CFW HENKAKU - 64 G",
       "priceIdr": 1537000,
       "imageUrl": "https://images.tokopedia.net/img/cache/900/VqbcmM/2023/7/19/1900ee11-ad8d-4e16-b983-560612a3c627.jpg",
-      "tags": ["Gaming", "Game Console", "Playstation"],
+      "tags": [
+        "Gaming",
+        "Game Console",
+        "Playstation"
+      ],
       "rating": 5,
       "stock": 100,
       "description": "Console handheld merk brand Playstation tipe Vita yg bisa Jadikan Remote Play PS4."
     },
-     {
+    {
       "id": 4,
       "name": "Logitech G305 Lightspeed Mouse Gaming Wireless Sensor 12K DPI",
       "priceIdr": 489000,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2024/6/12/093656e6-3df7-44d2-82df-bfc654d1360e.jpg.webp?ect=4g",
-      "tags": ["Laptop & Komputer", "Aksesoris PC Gaming", "Mouse Gaming"],
+      "tags": [
+        "Laptop & Komputer",
+        "Aksesoris PC Gaming",
+        "Mouse Gaming"
+      ],
       "rating": 5,
       "stock": 108,
       "description": "Mouse gaming brand logitech dengan konektivitas wireless "
     },
-     {
+    {
       "id": 5,
       "name": "TOZO AEROSOUND3 Smart 6 mics Hybrid ANC + AI 4 Mics ENC Wireless",
       "priceIdr": 296750,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/o3syd0/1997/1/1/e61ee372e74e49afb1415058380b87a7~.jpeg.webp?ect=4g",
-      "tags": ["Audio,,Kamera & Elektronik", "Audio", "Earphone"],
+      "tags": [
+        "Audio,,Kamera & Elektronik",
+        "Audio",
+        "Earphone"
+      ],
       "rating": 4.9,
       "stock": 19,
       "description": "TWS earbud dengan ketahanan 7 jam dan juga konektivitas Bluetooth 5.4 "
     },
-     {
+    {
       "id": 6,
       "name": "Adata SSD SU650 Ultimate 1TB 2.5 SATA III Garansi 3 Tahun - SSD ONLY, 1pc",
       "priceIdr": 888000,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/o3syd0/1997/1/1/5db63b4191f8403f8ea73bf69300e808~.jpeg.webp?ect=4g",
-      "tags": ["Laptop & Komputer", "Media penyimpanan Data", "SSD"],
+      "tags": [
+        "Laptop & Komputer",
+        "Media penyimpanan Data",
+        "SSD"
+      ],
       "rating": 4.9,
       "stock": 34,
       "description": "Penyimpanan komputer tipe SSD dengan kecepatan membaca 545MB/s "
     },
-     {
+    {
       "id": 7,
       "name": "Webcam JETE W9 1080p FHD Full HD with Privacy Cover 360° Rotation View",
       "priceIdr": 194922,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/aphluv/1997/1/1/899753311b5a4eb78fead966fb7d38c5~.jpeg.webp?ect=4g",
-      "tags": ["Laptop & Komputer", "Aksesoris Komputer & Laptop", "Webcam"],
+      "tags": [
+        "Laptop & Komputer",
+        "Aksesoris Komputer & Laptop",
+        "Webcam"
+      ],
       "rating": 4.9,
       "stock": 477,
       "description": "Webcam brand JETE dengan fitur Gambar yang lebih jernih & Kualitas Audio yang unggul"
     },
-      {
+    {
       "id": 8,
       "name": "GAMEN Keyboard Gaming Mechanical Linear Switch 94 Keys RGB Light Titan 7",
       "priceIdr": 279000,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/aphluv/1997/1/1/dc5cdaaf81f448d3851cc5b3f86a13cb~.jpeg.webp?ect=4g",
-      "tags": ["Laptop & Komputer", "Aksesoris PC Gaming", "Keyboard Keycaps & Switch"],
+      "tags": [
+        "Laptop & Komputer",
+        "Aksesoris PC Gaming",
+        "Keyboard Keycaps & Switch"
+      ],
       "rating": 5,
       "stock": 147,
       "description": "Keyboard Gaming merk brand GAMEN dengan fitur ombol yang kuat dengan ketahanan 50 juta kali "
     },
-      {
+    {
       "id": 9,
       "name": "Router Tp-Link Archer AX12 AX1500 Dual-Band Gigabit Wi-Fi 6",
       "priceIdr": 520000,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2023/12/13/907faa31-f413-4f6c-a1fd-a00147f8b2c5.jpg.webp?ect=4g",
-      "tags": ["Laptop & Komputer", "Networking", "Router"],
+      "tags": [
+        "Laptop & Komputer",
+        "Networking",
+        "Router"
+      ],
       "rating": 5,
       "stock": 1,
       "description": "Router merk brand TPLink dengan fitur WIFI 6 untuk kecepatan lebih cepat, kapasitas lebih besar, dan pengurangan kemacetan jaringan. - Kecepatan 1.5 Gbps "
     },
-     {
+    {
       "id": 10,
       "name": "Super Gaming kursi gaming kursi kantor kursi kursi kerja kantor kursi ergonomis kursi kamar aesthetic",
       "priceIdr": 639999,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/aphluv/1997/1/1/4c2c293f65784cf6979a8542c84206ff~.jpeg.webp?ect=4g",
-      "tags": ["Rumah Tangga", "Furniture", "Kursi Kan"],
+      "tags": [
+        "Rumah Tangga",
+        "Furniture",
+        "Kursi Kan"
+      ],
       "rating": 4.9,
       "stock": 22,
       "description": "Kursi gaming dengan fitur lateks kualitas tinggi dan jaring elastik tinggi. Dan bantal-bantal itu lembut"
     },
-    { 
+    {
       "id": 11,
       "name": "Sony Alpha a6400 a 6400 Mirrorless Digital Camera with E PZ 16-50mm f3.5-5.6 OSS II",
       "priceIdr": 13199000,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2025/2/12/8335d71f-77d3-4dfc-ae3d-afcdd55676db.jpg.webp?ect=4g",
-      "tags": ["Audio,Kamera & Elektronik", "Kamera Digital", "Kamera Mirroless"],
+      "tags": [
+        "Audio,Kamera & Elektronik",
+        "Kamera Digital",
+        "Kamera Mirroless"
+      ],
       "rating": 5,
       "stock": 2,
       "description": "Kamera Mirroless dengan sensor yang cepat dan cepat untuk mengambil video atau gambar"
@@ -115,13 +159,91 @@
       "name": "Monitor Xiaomi Gaming G24i",
       "priceIdr": 1424000,
       "imageUrl": "https://images.tokopedia.net/img/cache/500-square/aphluv/1997/1/1/0c5a775d15994dd79bb1308ba811466f~.jpeg.webp?ect=4g",
-      "tags": ["Laptop & Komputer", "Monitor", "Monitor LED"],
+      "tags": [
+        "Laptop & Komputer",
+        "Monitor",
+        "Monitor LED"
+      ],
       "rating": 5,
       "stock": 8,
       "description": "Monitor Gaming merk brand Xiaomi dengan fitur Refresh Rate 180Hz "
+    },
+    {
+      "id": 13,
+      "name": "Realme 3 Pro",
+      "priceIdr": 2000000,
+      "imageUrl": "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//87/MTA-3414074/realme_realme-3-pro-smartphone--128gb--6gb-_full10.jpg",
+      "tags": [
+        "HP",
+        "Smartphone",
+        "Elektronik"
+      ],
+      "rating": 0,
+      "stock": 99,
+      "description": "Hp realme 3"
+    },
+    {
+      "id": 14,
+      "name": "Nasi Goreng",
+      "priceIdr": 15000,
+      "imageUrl": "https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480_1_5x/img/recipe/ras/Assets/ae6d7be8ee924ba32b6175d12b7cfdac/Derivates/7c281c92d3d1501691729e4e45136927a11fe847.jpg",
+      "tags": [
+        "Makanan",
+        "Nasi",
+        "Nasi Goreng"
+      ],
+      "rating": 0,
+      "stock": 99,
+      "description": "Nasi Goreng Enak"
+    },
+    {
+      "id": 15,
+      "name": "Pizza",
+      "priceIdr": 17000,
+      "imageUrl": "https://www.allrecipes.com/thmb/aefJMDXKqs42oAP71dQuYf_-Qdc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/6776_Pizza-Dough_ddmfs_4x3_1724-fd91f26e0bd6400a9e89c6866336532b.jpg",
+      "tags": [
+        "Makanan",
+        "Italia",
+        "Pizza"
+      ],
+      "rating": 0,
+      "stock": 99,
+      "description": "Laper"
     }
-    
   ],
-  "newProductIds": [1, 2, 4, 11],
-  "popularProductIds": [3, 5, 8, 12]
+  "newProductIds": [
+    1,
+    2,
+    4,
+    11
+  ],
+  "popularProductIds": [
+    3,
+    5,
+    8,
+    12
+  ],
+  "shoppingCart": [
+    [
+      1,
+      4
+    ],
+    [
+      12,
+      2
+    ],
+    [
+      4,
+      2
+    ]
+  ],
+  "wishlistedProductIds": [
+    9,
+    10,
+    8,
+    5,
+    1,
+    4,
+    12
+  ]
 }

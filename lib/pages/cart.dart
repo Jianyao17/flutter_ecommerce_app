@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/pages/checkout.dart';
 import 'package:flutter/material.dart';
 import '../services/cart_service.dart';
 import '../models/cart_item.dart';
@@ -279,7 +280,17 @@ class _CartPageState extends State<CartPage>
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: filteredItems.isEmpty ? null : () {},
+                  onPressed: filteredItems.isEmpty ? null : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CheckoutPage(
+                          cartItems: filteredItems,
+                          subtotal: total,
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[400],
                     foregroundColor: Colors.black,
@@ -320,11 +331,9 @@ class _CartPageState extends State<CartPage>
         ],
       ),
       child: InkWell(
-        onTap: ()
-        => Navigator.push(context,
+        onTap: () => Navigator.push(context,
           MaterialPageRoute(
-            builder: (context) =>
-              ProductDetailsPage(currentProduct: item.product),
+            builder: (context) => ProductDetailsPage(currentProduct: item.product),
           ),
         ),
         child: Padding(
@@ -336,8 +345,7 @@ class _CartPageState extends State<CartPage>
                 borderRadius: BorderRadius.circular(16),
                 child: Image.network(item.product.imageUrl,
                   width: 64, height: 64, fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress)
-                  {
+                  loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return const Center(child: CircularProgressIndicator());
                   },

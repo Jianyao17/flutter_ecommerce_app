@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'pages/home.dart';
 import 'pages/wishlist.dart';
 import 'pages/cart.dart';
-import 'pages/profile.dart';
+import 'pages/add_product.dart';
 
 
 class NavMenu extends StatefulWidget {
@@ -21,7 +21,7 @@ class _NavMenuState extends State<NavMenu> {
     const HomePage(),
     const WishlistPage(),
     const CartPage(),
-    const ProfilePage()
+    const AddProductPage()
   ];
 
   void _onTap(int index)
@@ -57,7 +57,7 @@ class _NavMenuState extends State<NavMenu> {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
             color: Colors.black12,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
@@ -66,7 +66,7 @@ class _NavMenuState extends State<NavMenu> {
                 color: Colors.black87.withValues(alpha: 0.1),
                 blurRadius: 8,
                 spreadRadius: 2,
-                offset: Offset(0, 1),
+                offset: const Offset(0, 1),
               )
             ]
         ),
@@ -90,9 +90,9 @@ class _NavMenuState extends State<NavMenu> {
               'Cart'
             ),
             navMenuItem(3,
-              Icons.person,
-              CupertinoIcons.profile_circled,
-              'Profile'
+              Icons.add_circle_outline,
+              CupertinoIcons.plus_circle_fill,
+              'Add'
             )
           ],
         ),
@@ -116,7 +116,7 @@ class _NavMenuState extends State<NavMenu> {
         child: GestureDetector(
           onTap: () => setState(() => _onTap(index)),
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: isSelected ? Colors.grey.withValues(alpha: 0.1) : Colors.transparent,
@@ -127,7 +127,7 @@ class _NavMenuState extends State<NavMenu> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(isSelected ? activeIcon : icon, color: itemColor, size: 24),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(label,
                   style: TextStyle(
                     color: itemColor,

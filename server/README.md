@@ -4,8 +4,9 @@ API sederhana untuk backend aplikasi e-commerce berbasis Node.js dan Hapi.
 
 ## Fitur
 - Endpoint produk (list, detail, new, popular, carousel)
-- Wishlist
-- Keranjang belanja
+- Tambah produk baru
+- Wishlist dengan penyimpanan permanen
+- Keranjang belanja dengan penyimpanan permanen
 - CORS sudah diaktifkan
 
 ## Prasyarat
@@ -28,6 +29,7 @@ Server akan berjalan di `http://0.0.0.0:3000` (atau sesuai port yang diatur).
 
 ## Endpoint Utama
 - `GET /products` — Semua produk
+- `POST /products` — Tambah produk baru
 - `GET /products/new` — Produk baru
 - `GET /products/popular` — Produk populer
 - `GET /products/carousel` — 5 produk acak untuk carousel
@@ -43,7 +45,42 @@ Server akan berjalan di `http://0.0.0.0:3000` (atau sesuai port yang diatur).
 
 ## Spesifikasi Request & Response
 
-### 1. Tambah ke Wishlist
+### 1. Tambah Produk Baru
+**POST /products**
+
+Request body:
+```json
+{
+  "name": "Nama Produk",
+  "priceIdr": 1000000,
+  "imageUrl": "https://example.com/image.jpg",
+  "tags": ["Kategori1", "Kategori2"],
+  "stock": 10,
+  "description": "Deskripsi produk (opsional)",
+  "rating": 0
+}
+```
+
+Response (berhasil):
+```json
+{
+  "status": "success",
+  "message": "Product added successfully",
+  "product": {
+    "id": 123,
+    "name": "Nama Produk",
+    "priceIdr": 1000000,
+    "imageUrl": "https://example.com/image.jpg",
+    "tags": ["Kategori1", "Kategori2"],
+    "stock": 10,
+    "description": "Deskripsi produk",
+    "rating": 0,
+    "isWishlisted": false
+  }
+}
+```
+
+### 2. Tambah ke Wishlist
 **POST /products/{id}/wishlist**
 
 Request:
@@ -58,7 +95,7 @@ Response (berhasil):
 }
 ```
 
-### 2. Tambah/Update Keranjang (Replace Quantity)
+### 3. Tambah/Update Keranjang (Replace Quantity)
 **POST /cart**
 
 Request body:
@@ -84,7 +121,7 @@ Response (gagal, stok kurang):
 }
 ```
 
-### 3. Tambah Item ke Keranjang (Tambah 1 per request)
+### 4. Tambah Item ke Keranjang (Tambah 1 per request)
 **POST /cart/item**
 
 Request body:
@@ -109,7 +146,7 @@ Response (gagal, stok kurang):
 }
 ```
 
-### 4. Lihat Keranjang
+### 5. Lihat Keranjang
 **GET /cart**
 
 Response:
@@ -135,7 +172,7 @@ Response:
 }
 ```
 
-### 5. Contoh Response Produk
+### 6. Contoh Response Produk
 **GET /products**
 
 Response:

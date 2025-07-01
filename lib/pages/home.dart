@@ -13,14 +13,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin
 {
-  @override
-  bool get wantKeepAlive => true;
-
   late List<Product>? carouselProducts;
   late List<Product>? popularProducts;
   late List<Product>? newProducts;
+  List<Product>? allProducts;
   bool _isLoading = true;
   String? _error;
 
@@ -31,22 +28,24 @@ class _HomePageState extends State<HomePage>
     _loadProducts();
   }
 
-  Future<void> _loadProducts() async
+  Future<void> _loadProducts() async 
   {
     try {
       final responses = await Future.wait([
-        http.get(Uri.parse('http://10.0.2.2:3000/products/carousel')),
-        http.get(Uri.parse('http://10.0.2.2:3000/products/popular')),
-        http.get(Uri.parse('http://10.0.2.2:3000/products/new')),
+        http.get(Uri.parse('http://localhost:3000/products/carousel')),
+        http.get(Uri.parse('http://localhost:3000/products/popular')),
+        http.get(Uri.parse('http://localhost:3000/products/new')),
+        http.get(Uri.parse('http://localhost:3000/products')),
       ]);
 
-      if (responses.every((res) => res.statusCode == 200))
+      if (responses.take(3).every((res) => res.statusCode == 200) && 
+          responses[3].statusCode == 200) 
       {
         setState(() {
-          // Assuming the response body is a JSON array of products
           carouselProducts = Product.listFromJson(responses[0].body);
           popularProducts = Product.listFromJson(responses[1].body);
           newProducts = Product.listFromJson(responses[2].body);
+          allProducts = Product.listFromJson(responses[3].body);
           _isLoading = false;
         });
       }
@@ -60,7 +59,6 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context)
   {
-    super.build(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black12,
@@ -80,8 +78,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Padding buildHomeLayout(BuildContext context)
-  {
+  Padding buildHomeLayout(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
@@ -92,21 +89,17 @@ class _HomePageState extends State<HomePage>
             // Search Bar
             TextField(
               onChanged: _onSearchChanged,
-              style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14
-              ),
+              style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
               decoration: InputDecoration(
                 hintText: 'Search Product',
                 prefixIcon: const Icon(Icons.search),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.7)),
-                    borderRadius: BorderRadius.circular(16)
+                  borderSide: BorderSide(color: Colors.grey, width: 0.7),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.8), width: 2),
-                    borderRadius: BorderRadius.circular(16)
+                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
             ),
@@ -161,6 +154,32 @@ class _HomePageState extends State<HomePage>
                     ProductCard(product: newProducts![index]),
               ),
             ),
+            const SizedBox(height: 30),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
+              child: const Text(
+                "All Products",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            if (allProducts != null && allProducts!.isNotEmpty)
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 0.7,
+                ),
+                itemCount: allProducts!.length,
+                itemBuilder: (context, index) => ProductCard(product: allProducts![index]),
+              )
+            else
+              const Center(child: Text('No products found.')),
             const SizedBox(height: 20),
           ],
         ),

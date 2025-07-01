@@ -5,7 +5,7 @@ import '../models/product.dart';
 
 class CartService
 {
-  static const String baseUrl = 'http://10.0.2.2:3000';
+  static const String baseUrl = 'http://localhost:3000';
 
   // Fetches the cart items from the server
   Future<List<CartItem>> fetchCart() async

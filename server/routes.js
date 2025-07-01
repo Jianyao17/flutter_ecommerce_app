@@ -1,11 +1,20 @@
 import fs from "fs";
-const db = JSON.parse(fs.readFileSync("./database.json", "utf-8"));
+let db = JSON.parse(fs.readFileSync("./database.json", "utf-8"));
+
+// Function to save database changes
+const saveDatabase = () => {
+  fs.writeFileSync("./database.json", JSON.stringify(db, null, 2));
+};
 
 // Menyimpan ID produk yang ada di wishlist. Set efisien untuk data unik.
-const wishlistedProductIds = new Set([9, 10, 8, 5]); // Inisialisasi dengan beberapa item
+const wishlistedProductIds = new Set(Array.isArray(db.wishlistedProductIds) ? db.wishlistedProductIds : [9, 10, 8, 5]);
 
 // Menyimpan item di keranjang belanja. Map ideal untuk `productId` => `quantity`.
-const shoppingCart = new Map();
+const shoppingCart = new Map(
+  Array.isArray(db.shoppingCart)
+    ? db.shoppingCart.map(([k, v]) => [Number(k), v])
+    : []
+);
 
 // --- Helper Functions ---
 /**
@@ -38,6 +47,7 @@ const routes = [
           popular_products: "/products/popular",
           carousel_products: "/products/carousel",
           product_by_id: "/products/{id}",
+          add_product: "POST /products",
 
           wishlist: "/products/wishlist",
           add_to_wishlist: "POST /products/{id}/wishlist",
@@ -129,46 +139,47 @@ const routes = [
   {
     method: "POST",
     path: "/products/{id}/wishlist",
-    handler: (request, h) => 
-    {
+    handler: (request, h) => {
       const id = parseInt(request.params.id, 10);
-      const productExists = db.products.some((p) => p.id === id);
+      const product = db.products.find((p) => p.id === id);
 
-      if (!productExists) 
-      {
-        return h
-          .response({ message: "Product not found" })
-          .code(404);
+      if (!product) {
+        return h.response({ message: "Product not found" }).code(404);
       }
 
       wishlistedProductIds.add(id);
-      return h
-        .response({
-          message: `Product with id ${id} has been added to wishlist.`,
-          wishlistedIds: [...wishlistedProductIds],
-        }).code(200);
+      
+      // Save wishlist to database
+      db.wishlistedProductIds = Array.from(wishlistedProductIds);
+      saveDatabase();
+
+      return h.response({
+        message: "Product added to wishlist",
+        product: addWishlistStatus(product),
+      });
     },
   },
   {
     method: "DELETE",
     path: "/products/{id}/wishlist",
-    handler: (request, h) => 
-    {
+    handler: (request, h) => {
       const id = parseInt(request.params.id, 10);
+      const product = db.products.find((p) => p.id === id);
 
-      if (wishlistedProductIds.has(id)) 
-      {
-        wishlistedProductIds.delete(id);
-        return h
-          .response({
-            message: `Product with id ${id} has been removed from wishlist.`,
-            wishlistedIds: [...wishlistedProductIds],
-          }).code(200);
+      if (!product) {
+        return h.response({ message: "Product not found" }).code(404);
       }
 
-      return h
-        .response({ message: "Product was not in wishlist." })
-        .code(404);
+      wishlistedProductIds.delete(id);
+      
+      // Save wishlist to database
+      db.wishlistedProductIds = Array.from(wishlistedProductIds);
+      saveDatabase();
+
+      return h.response({
+        message: "Product removed from wishlist",
+        product: addWishlistStatus(product),
+      });
     },
   },
 
@@ -188,7 +199,7 @@ const routes = [
         if (product) 
         {
           itemsInCart.push({ ...product, quantityInCart: quantity });
-          totalPrice += product.price * quantity;
+          totalPrice += (product.priceIdr || 0) * quantity;
           totalItems += quantity;
         }
       }
@@ -205,40 +216,28 @@ const routes = [
   {
     method: "POST",
     path: "/cart",
-    handler: (request, h) => 
-    {
-      const { productId, quantity } = request.payload;
-
-      // Validasi input
-      if (!productId || !quantity || typeof quantity !== 'number' || quantity <= 0) 
-      {
-        return h
-          .response({ message: "Invalid input. 'productId' and a positive 'quantity' are required." })
-          .code(400);
+    handler: (request, h) => {
+      const { productId, quantity = 1 } = request.payload;
+      const pid = Number(productId);
+      const qty = Number(quantity);
+      const product = db.products.find((p) => p.id === pid);
+      if (!product) {
+        return h.response({ message: "Product not found" }).code(404);
       }
-
-      const product = db.products.find((p) => p.id === productId);
-      if (!product) 
-      {
-        return h
-          .response({ message: "Product not found" })
-          .code(404);
+      if (qty < 1) {
+        return h.response({ message: "Quantity must be at least 1." }).code(400);
       }
-      if (quantity > product.stock) 
-      {
-        return h
-          .response({ message: `Insufficient stock for ${product.name}. Only ${product.stock} left.` })
-          .code(400);
+      if (qty > product.stock) {
+        return h.response({ message: `Insufficient stock for ${product.name}. Only ${product.stock} available.` }).code(400);
       }
-
-      // Menambahkan atau memperbarui jumlah barang di keranjang
-      shoppingCart.set(productId, quantity);
-
-      return h
-        .response({
-          message: `${quantity} x ${product.name} has been added/updated in your cart.`,
-          cart: Object.fromEntries(shoppingCart) // Tampilkan isi Map untuk debug
-        }).code(200);
+      shoppingCart.set(pid, qty);
+      db.shoppingCart = Array.from(shoppingCart.entries());
+      saveDatabase();
+      return h.response({
+        message: "Cart updated successfully",
+        productId: pid,
+        quantity: qty,
+      });
     },
   },
   {
@@ -247,55 +246,86 @@ const routes = [
     handler: (request, h) => 
     {
       const { productId } = request.payload;
-      if (!productId) 
-      {
-        return h
-          .response({ message: "Invalid input. 'productId' is required." })
-          .code(400);
+      if (!productId) {
+        return h.response({ message: "Invalid input. 'productId' is required." }).code(400);
       }
-      const product = db.products.find((p) => p.id === productId);
-      if (!product) 
-      {
-        return h
-          .response({ message: "Product not found" })
-          .code(404);
+      const pid = Number(productId);
+      const product = db.products.find((p) => p.id === pid);
+      if (!product) {
+        return h.response({ message: "Product not found" }).code(404);
       }
-      const currentQty = shoppingCart.get(productId) || 0;
-      if (currentQty + 1 > product.stock) 
-      {
-        return h
-          .response({ message: `Insufficient stock for ${product.name}. Only ${product.stock - currentQty} left in cart.` })
-          .code(400);
+      const currentQty = shoppingCart.get(pid) || 0;
+      if (currentQty + 1 > product.stock) {
+        return h.response({ message: `Insufficient stock for ${product.name}. Only ${product.stock - currentQty} left in cart.` }).code(400);
       }
-      shoppingCart.set(productId, currentQty + 1);
-      return h
-        .response({
-          message: `${product.name} has been added to your cart (total: ${currentQty + 1}).`,
-          cart: Object.fromEntries(shoppingCart)
-        }).code(200);
+      shoppingCart.set(pid, currentQty + 1);
+      db.shoppingCart = Array.from(shoppingCart.entries());
+      saveDatabase();
+      return h.response({
+        message: `${product.name} has been added to your cart (total: ${currentQty + 1}).`,
+        cart: Object.fromEntries(shoppingCart)
+      }).code(200);
     },
   },
   {
     method: "DELETE",
     path: "/cart/item/{id}",
-    handler: (request, h) => 
-    {
+    handler: (request, h) => {
       const id = parseInt(request.params.id, 10);
-
-      if (shoppingCart.has(id)) 
-      {
-        shoppingCart.delete(id);
-        return h
-          .response({
-            message: `Product with id ${id} has been removed from the cart.`,
-            cart: Object.fromEntries(shoppingCart)
-          }).code(200);
+      if (!shoppingCart.has(id)) {
+        return h.response({ message: "Product not in cart" }).code(404);
+      }
+      shoppingCart.delete(id);
+      db.shoppingCart = Array.from(shoppingCart.entries());
+      saveDatabase();
+      return h.response({
+        message: "Product removed from cart",
+        productId: id,
+      });
+    },
+  },
+  {
+    method: "POST",
+    path: "/products",
+    handler: (request, h) => {
+      const newProduct = request.payload;
+      
+      // Validate required fields
+      if (!newProduct.name || !newProduct.priceIdr || !newProduct.imageUrl || !newProduct.tags || !newProduct.stock) {
+        return h.response({
+          status: "error",
+          message: "Missing required fields. Required: name, priceIdr, imageUrl, tags, stock"
+        }).code(400);
       }
 
-      return h
-        .response({ message: "Product not found in cart." })
-        .code(404);
-    },
+      // Generate new ID
+      const maxId = Math.max(...db.products.map(p => p.id));
+      const newId = maxId + 1;
+
+      // Create the product object
+      const productToAdd = {
+        id: newId,
+        name: newProduct.name,
+        priceIdr: newProduct.priceIdr,
+        imageUrl: newProduct.imageUrl,
+        tags: newProduct.tags,
+        rating: newProduct.rating || 0,
+        stock: newProduct.stock,
+        description: newProduct.description || ""
+      };
+
+      // Add to database
+      db.products.push(productToAdd);
+      
+      // Save changes to file
+      saveDatabase();
+
+      return h.response({
+        status: "success",
+        message: "Product added successfully",
+        product: addWishlistStatus(productToAdd)
+      }).code(201);
+    }
   },
 ];
 
